@@ -31,14 +31,13 @@ func main() {
 
 func action(context *cli.Context) error {
 	if context.NArg() == 0 {
-		return errors.New("Day must be specified")
+		return errors.New("day must be specified")
 	}
 	day, err := strconv.Atoi(context.Args().First())
 	if err != nil {
 		return err
 	}
 	part2 := context.GlobalBool("part2")
-	fmt.Println(part2)
 	return runDay(day, part2)
 }
 
@@ -48,7 +47,8 @@ func runDay(day int, part2 bool) error {
 		return err
 	}
 
-	fun := func(string) int { return 0 }
+	fun := func(string) (int, error) { return 0, nil }
+
 	switch day {
 	case 1:
 		fun = day01.Part1
@@ -56,8 +56,15 @@ func runDay(day int, part2 bool) error {
 			fun = day01.Part2
 		}
 	default:
-		return fmt.Errorf("Day %d is not implemented", day)
+		return fmt.Errorf("day %d is not implemented", day)
 	}
-	fmt.Println(fun(input))
+
+	result, err := fun(input)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(result)
+
 	return nil
 }
