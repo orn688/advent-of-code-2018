@@ -8,8 +8,8 @@ import (
 
 	"github.com/urfave/cli"
 
-	"github.com/orn688/advent-of-code-2018/client"
-	"github.com/orn688/advent-of-code-2018/days/day01"
+	"github.com/orn688/advent-of-code-2018/internal/client"
+	"github.com/orn688/advent-of-code-2018/internal/day01"
 )
 
 func main() {

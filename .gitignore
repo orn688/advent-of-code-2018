@@ -25,5 +25,8 @@
 # Cached inputs for Advent of Code
 .aoc_cache
 
+# Executable
+advent-of-code-2018
+
 # Environment variables
 .envrc
