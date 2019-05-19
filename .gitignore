@@ -1,4 +1,3 @@
-
 # Created by https://www.gitignore.io/api/go
 # Edit at https://www.gitignore.io/?templates=go
 
@@ -20,4 +19,11 @@
 /vendor/
 /Godeps/
 
-# End of https://www.gitignore.io/api/go
+# Mac
+.DS_Store
+
+# Cached inputs for Advent of Code
+.aoc_cache
+
+# Environment variables
+.envrc
