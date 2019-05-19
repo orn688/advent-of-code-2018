@@ -9,7 +9,11 @@ import (
 	"strconv"
 )
 
-// GetInput fetches and returns the AoC input for the given day.
+var cacheDirName = ".aoc_cache"
+
+// GetInput fetches and returns the AoC input for the given day. It maintains a
+// local cache of the input for each day (in .aoc_cache/<day>) to avoid making
+// redundant requests to the AoC server.
 func GetInput(day int) (string, error) {
 	input, err := getInputFromCache(day)
 	if err != nil {
@@ -76,14 +80,6 @@ func saveInputToCache(day int, input string) error {
 	return ioutil.WriteFile(fileName, []byte(input), 0644)
 }
 
-func getCacheDir() (string, error) {
-	currentDir, err := os.Getwd()
-	if err != nil {
-		return "", nil
-	}
-	return path.Join(currentDir, ".aoc_cache"), nil
-}
-
 func cachedFileForDay(day int) (string, error) {
 	cacheDir, err := getCacheDir()
 	if err != nil {
@@ -92,4 +88,12 @@ func cachedFileForDay(day int) (string, error) {
 
 	fileName := path.Join(cacheDir, strconv.Itoa(day))
 	return fileName, nil
+}
+
+func getCacheDir() (string, error) {
+	currentDir, err := os.Getwd()
+	if err != nil {
+		return "", nil
+	}
+	return path.Join(currentDir, cacheDirName), nil
 }
