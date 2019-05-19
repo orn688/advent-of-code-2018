@@ -19,7 +19,7 @@ func Part1(input string) (string, error) {
 	return strconv.Itoa(frequency), nil
 }
 
-// Part2 returns the frequency at the end.
+// Part2 returns the first frequency to be hit twice.
 func Part2(input string) (string, error) {
 	diffs, err := parseInput(input)
 	if err != nil {
