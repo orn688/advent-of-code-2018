@@ -7,23 +7,23 @@ import (
 )
 
 // Part1 returns the frequency at the end.
-func Part1(input string) (int, error) {
+func Part1(input string) (string, error) {
 	diffs, err := parseInput(input)
 	if err != nil {
-		return 0, err
+		return "", err
 	}
 	frequency := 0
 	for _, diff := range diffs {
 		frequency += diff
 	}
-	return frequency, nil
+	return strconv.Itoa(frequency), nil
 }
 
 // Part2 returns the frequency at the end.
-func Part2(input string) (int, error) {
+func Part2(input string) (string, error) {
 	diffs, err := parseInput(input)
 	if err != nil {
-		return 0, err
+		return "", err
 	}
 	seen := make(map[int]bool)
 	frequency := 0
@@ -36,7 +36,7 @@ func Part2(input string) (int, error) {
 		seen[frequency] = true
 		i = (i + 1) % len(diffs)
 	}
-	return frequency, nil
+	return strconv.Itoa(frequency), nil
 }
 
 func parseInput(input string) ([]int, error) {
