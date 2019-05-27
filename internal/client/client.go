@@ -93,7 +93,7 @@ func cachedFileForDay(day int) (string, error) {
 func getCacheDir() (string, error) {
 	currentDir, err := os.Getwd()
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 	return path.Join(currentDir, cacheDirName), nil
 }
