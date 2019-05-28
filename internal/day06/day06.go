@@ -43,9 +43,28 @@ func Part1(input string) (string, error) {
 	return strconv.Itoa(maxArea), nil
 }
 
-// Part2 is unimplemented
+// Part2 returns the size of the region A such that for each point a in A, the
+// value sum(manhattanDist(a, p) for p in points) is less than 10,000.
+//
+// NOTE: this assumes that the region will be entirely contained within the
+// bounding box of the points, but this will not be true in all cases.
 func Part2(input string) (string, error) {
-	return "", nil
+	maxDist := 10000
+	points, err := parseInput(input)
+	if err != nil {
+		return "", err
+	}
+	maxX, maxY, minX, minY := extremeCoords(points)
+	regionArea := 0
+	for x := minX; x <= maxX; x++ {
+		for y := minY; y <= maxY; y++ {
+			source := point{x, y}
+			if totalManhattanDistance(source, points) < maxDist {
+				regionArea++
+			}
+		}
+	}
+	return strconv.Itoa(regionArea), nil
 }
 
 func parseInput(input string) ([]point, error) {
@@ -124,8 +143,8 @@ func plotPoints(points []point) [][]int {
 	return grid
 }
 
-// extremeCoords returns the extreme x and y values of the input points. Assumes all x and y
-// values are non-negative.
+// extremeCoords returns the extreme x and y values of the input points.
+// Assumes all x and y values are non-negative.
 func extremeCoords(points []point) (maxX int, maxY int, minX int, minY int) {
 	if len(points) == 0 {
 		return
@@ -179,6 +198,17 @@ func manhattanSearch(source point, grid [][]int, given [][]bool) int {
 		}
 	}
 	return -1
+}
+
+func totalManhattanDistance(source point, points []point) (totalDist int) {
+	for _, dest := range points {
+		totalDist += manhattanDistance(source, dest)
+	}
+	return
+}
+
+func manhattanDistance(source point, dest point) int {
+	return abs(dest.X-source.X) + abs(dest.Y-source.Y)
 }
 
 func abs(x int) int {
