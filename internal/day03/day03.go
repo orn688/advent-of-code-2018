@@ -6,6 +6,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/orn688/advent-of-code-2018/internal/util"
 )
 
 type coordinate struct {
@@ -88,14 +90,17 @@ func parseInput(input string) ([]*fabricClaim, error) {
 	claims := make([]*fabricClaim, len(lines))
 
 	for i, line := range lines {
-		groups := captureRegexGroups(regex, line)
+		groups, err := util.CaptureRegexGroups(regex, line)
+		if err != nil {
+			return claims, fmt.Errorf("invalid line: %s", line)
+		}
 		claimID, err := strconv.Atoi(groups["ClaimID"])
 		leftDist, err := strconv.Atoi(groups["LeftDist"])
 		topDist, err := strconv.Atoi(groups["TopDist"])
 		width, err := strconv.Atoi(groups["Width"])
 		height, err := strconv.Atoi(groups["Height"])
 		if err != nil {
-			return claims, fmt.Errorf("invalid line: %s", line)
+			return claims, fmt.Errorf("invalid data in line: %s", line)
 		}
 
 		claims[i] = &fabricClaim{
@@ -120,15 +125,4 @@ func getClaimCounts(claims []*fabricClaim) map[coordinate]int {
 	}
 
 	return claimCounts
-}
-
-func captureRegexGroups(regex *regexp.Regexp, str string) map[string]string {
-	names := regex.SubexpNames()
-	groups := make(map[string]string, len(names))
-	match := regex.FindStringSubmatch(str)
-
-	for i := range names {
-		groups[names[i]] = match[i]
-	}
-	return groups
 }
