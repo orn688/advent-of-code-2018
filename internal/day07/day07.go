@@ -21,6 +21,11 @@ type requirement struct {
 	Dependency string
 }
 
+type stepInProgress struct {
+	Step     string
+	TimeLeft int
+}
+
 // A dependencyGraph is an adjacency list mapping step names to the names of
 // steps that depend on them.
 // ReverseAlphaOrder indicates whether a step named B should be built before a
@@ -91,12 +96,14 @@ func (graph *dependencyGraph) stepWasBuilt(step string) {
 	}
 }
 
-func (graph *dependencyGraph) getNextStep() (string, error) {
+// The second return value is the flag to indicate whether a buildable step was
+// returned.
+func (graph *dependencyGraph) getNextStep() (string, bool) {
 	if len(graph.stepsReadyToBuild) == 0 {
-		return "", fmt.Errorf("no steps left to build")
+		return "", false
 	}
 	element := heap.Pop(&graph.stepsReadyToBuild).(util.HeapElement)
-	return element.Value, nil
+	return element.Value, true
 }
 
 // Part1 returns a topological ordering of the steps, based on the requirements
@@ -110,8 +117,8 @@ func Part1(input string) (string, error) {
 	ordering := make([]string, len(graph.adjList))
 
 	for i := 0; i < len(ordering); i++ {
-		nextStep, err := graph.getNextStep()
-		if err != nil {
+		nextStep, stepAvailable := graph.getNextStep()
+		if !stepAvailable {
 			// We got to a point where there are no uncompleted steps whose
 			// dependencies are all completed, but not all steps have been put
 			// into the ordering - i.e., a cycle.
@@ -127,32 +134,49 @@ func Part1(input string) (string, error) {
 // Part2 returns the time it would take workerCount workers to complete the
 // steps.
 func Part2(input string) (string, error) {
-	steps, err := Part1(input)
+	reqs, err := parseInput(input)
 	if err != nil {
 		return "", err
 	}
+	graph := newDependencyGraph(reqs, true)
 
 	workerCount := 5
-	currentJobDurations := make([]int, workerCount)
-	stepIndex := 0
+	currentSteps := make([]stepInProgress, workerCount)
 	complete := false
-	time := 0
+	time := -1
 	for !complete {
-		complete = true // Assume, then verify
-		for i := range currentJobDurations {
-			if currentJobDurations[i] == 0 && stepIndex < len(steps) {
-				// TODO: we can't just take the next step; all of its
-				// dependencies must also be complete.
-				currentJobDurations[i] = stepDuration(steps[stepIndex])
-				stepIndex++
-			}
-			if currentJobDurations[i] > 0 {
-				currentJobDurations[i]--
+		time++
+		// Assume, then verify
+		complete = true
+		for i := range currentSteps {
+			if currentSteps[i].TimeLeft == 0 {
+				oldStep := currentSteps[i].Step
+				if oldStep != "" {
+					graph.stepWasBuilt(oldStep)
+				}
+				nextStep, stepAvailable := graph.getNextStep()
+				if stepAvailable {
+					complete = false
+					currentSteps[i] = stepInProgress{
+						Step:     nextStep,
+						TimeLeft: stepDuration(nextStep) - 1,
+					}
+				} else {
+					currentSteps[i].Step = ""
+				}
+			} else {
+				currentSteps[i].TimeLeft--
 				complete = false
 			}
 		}
-		time++
 	}
+
+	for _, dependencyCount := range graph.unbuiltDependencyCounts {
+		if dependencyCount > 0 {
+			return "", fmt.Errorf("cycle detected")
+		}
+	}
+
 	return strconv.Itoa(time), nil
 }
 
@@ -184,7 +208,7 @@ func parseLine(line string) (req requirement, err error) {
 }
 
 // Assumes the step has length 1 and is A-Z.
-func stepDuration(step byte) int {
+func stepDuration(step string) int {
 	durationOfStepA := 61
-	return durationOfStepA + (int(step) - int('A'))
+	return durationOfStepA + (int(step[0]) - int('A'))
 }
