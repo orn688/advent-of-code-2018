@@ -16,6 +16,7 @@ import (
 	"github.com/orn688/advent-of-code-2018/internal/day05"
 	"github.com/orn688/advent-of-code-2018/internal/day06"
 	"github.com/orn688/advent-of-code-2018/internal/day07"
+	"github.com/orn688/advent-of-code-2018/internal/day08"
 )
 
 func main() {
@@ -90,6 +91,11 @@ func runDay(day int, part2 bool) error {
 		fun = day07.Part1
 		if part2 {
 			fun = day07.Part2
+		}
+	case 8:
+		fun = day08.Part1
+		if part2 {
+			fun = day08.Part2
 		}
 	default:
 		return fmt.Errorf("day %d is not implemented", day)
