@@ -12,7 +12,7 @@ var inputRegex = regexp.MustCompile(`(?P<PlayerCount>\d+) players; last ` +
 	`marble is worth (?P<LastMarble>\d+) points`)
 
 // Part1 returns the max score of any player after playing the game with the
-// given number of players and marbles.
+// given number of players and the highest marble value.
 func Part1(input string) (string, error) {
 	playerCount, lastMarble, err := parseInput(input)
 	if err != nil {
@@ -22,9 +22,15 @@ func Part1(input string) (string, error) {
 	return strconv.Itoa(max(scores)), nil
 }
 
-// Part2 is unimplemented
+// Part2 returns the max score of any player after playing the game with the
+// given number of players, and highest marble value multiplied by 100.
 func Part2(input string) (string, error) {
-	return "", nil
+	playerCount, lastMarble, err := parseInput(input)
+	if err != nil {
+		return "", err
+	}
+	scores := playGame(playerCount, lastMarble*100)
+	return strconv.Itoa(max(scores)), nil
 }
 
 func playGame(playerCount, lastMarble int) []int {
