@@ -17,7 +17,10 @@ import (
 	"github.com/orn688/advent-of-code-2018/internal/day06"
 	"github.com/orn688/advent-of-code-2018/internal/day07"
 	"github.com/orn688/advent-of-code-2018/internal/day08"
+	"github.com/orn688/advent-of-code-2018/internal/day09"
 )
+
+type dayfunc func(string) (string, error)
 
 func main() {
 	app := cli.NewApp()
@@ -54,8 +57,21 @@ func runDay(day int, part2 bool) error {
 		return err
 	}
 
-	var fun func(string) (string, error)
+	fun, err := funcForDay(day, part2)
+	if err != nil {
+		return err
+	}
+	result, err := fun(input)
+	if err != nil {
+		return err
+	}
 
+	fmt.Println(result)
+
+	return nil
+}
+
+func funcForDay(day int, part2 bool) (fun dayfunc, err error) {
 	switch day {
 	case 1:
 		fun = day01.Part1
@@ -97,16 +113,13 @@ func runDay(day int, part2 bool) error {
 		if part2 {
 			fun = day08.Part2
 		}
+	case 9:
+		fun = day09.Part1
+		if part2 {
+			fun = day09.Part2
+		}
 	default:
-		return fmt.Errorf("day %d is not implemented", day)
+		err = fmt.Errorf("day %d is not implemented", day)
 	}
-
-	result, err := fun(input)
-	if err != nil {
-		return err
-	}
-
-	fmt.Println(result)
-
-	return nil
+	return fun, err
 }
