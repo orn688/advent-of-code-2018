@@ -40,6 +40,8 @@ func requestInput(day int) (string, error) {
 	resp, err := client.Do(req)
 	if err != nil {
 		return "", err
+	} else if resp.StatusCode != 200 {
+		return "", fmt.Errorf("failed to fetch puzzle input: %s", resp.Status)
 	}
 
 	defer resp.Body.Close()
