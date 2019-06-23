@@ -5,8 +5,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gonum/stat"
-
 	"github.com/orn688/advent-of-code-2018/internal/util"
 )
 
@@ -123,16 +121,6 @@ func (grid *pointgrid) _refreshBounds() {
 			grid.minY = pt.Y
 		}
 	}
-}
-
-func (grid *pointgrid) stdDev() float64 {
-	xValues := make([]float64, len(grid.points))
-	yValues := make([]float64, len(grid.points))
-	for i, pt := range grid.points {
-		xValues[i] = float64(pt.X)
-		yValues[i] = float64(pt.Y)
-	}
-	return stat.StdDev(xValues, nil) + stat.StdDev(yValues, nil)
 }
 
 // Part1 returns the message that the points form at the moment that they
