@@ -37,6 +37,7 @@ func max3x3Square(serialNumber, width, height int) (maxSquareX, maxSquareY int) 
 }
 
 // Part2 returns the max-sum square of any size in the grid.
+// TODO: optimize (it does a very slow brute force)
 func Part2(input string) (string, error) {
 	serialNumber, err := strconv.Atoi(strings.TrimSpace(input))
 	if err != nil {
