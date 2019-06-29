@@ -20,6 +20,7 @@ import (
 	"github.com/orn688/advent-of-code-2018/internal/day09"
 	"github.com/orn688/advent-of-code-2018/internal/day10"
 	"github.com/orn688/advent-of-code-2018/internal/day11"
+	"github.com/orn688/advent-of-code-2018/internal/day12"
 )
 
 type dayfunc func(string) (string, error)
@@ -129,6 +130,11 @@ func funcForDay(day int, part2 bool) (fun dayfunc, err error) {
 		fun = day11.Part1
 		if part2 {
 			fun = day11.Part2
+		}
+	case 12:
+		fun = day12.Part1
+		if part2 {
+			fun = day12.Part2
 		}
 	default:
 		err = fmt.Errorf("day %d is not implemented", day)
