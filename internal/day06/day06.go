@@ -49,10 +49,17 @@ func Part1(input string) (string, error) {
 // NOTE: this assumes that the region will be entirely contained within the
 // bounding box of the points, but this will not be true in all cases.
 func Part2(input string) (string, error) {
-	maxDist := 10000
-	points, err := parseInput(input)
+	regionArea, err := centralAreaSize(input, 10000)
 	if err != nil {
 		return "", err
+	}
+	return strconv.Itoa(regionArea), nil
+}
+
+func centralAreaSize(input string, maxDist int) (int, error) {
+	points, err := parseInput(input)
+	if err != nil {
+		return 0, err
 	}
 	maxX, maxY, minX, minY := extremeCoords(points)
 	regionArea := 0
@@ -64,7 +71,7 @@ func Part2(input string) (string, error) {
 			}
 		}
 	}
-	return strconv.Itoa(regionArea), nil
+	return regionArea, nil
 }
 
 func parseInput(input string) ([]point, error) {
