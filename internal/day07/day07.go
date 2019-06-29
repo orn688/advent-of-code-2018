@@ -28,7 +28,7 @@ type stepInProgress struct {
 
 // A dependencyGraph is an adjacency list mapping step names to the names of
 // steps that depend on them.
-// ReverseAlphaOrder indicates whether a step named B should be built before a
+// reverseAlphaOrder indicates whether a step named B should be built before a
 // step named A, all else being equal
 type dependencyGraph struct {
 	adjList                 map[string][]string
@@ -48,6 +48,9 @@ func newDependencyGraph(reqs []requirement, reverse bool) dependencyGraph {
 		graph.adjList[req.Dependency] = append(
 			graph.adjList[req.Dependency], req.Depender,
 		)
+		if _, present := graph.adjList[req.Depender]; !present {
+			graph.adjList[req.Depender] = make([]string, 0)
+		}
 	}
 	graph.setDependencyCounts()
 	graph.setStepsReadyToBuild()
@@ -134,13 +137,20 @@ func Part1(input string) (string, error) {
 // Part2 returns the time it would take workerCount workers to complete the
 // steps.
 func Part2(input string) (string, error) {
-	reqs, err := parseInput(input)
+	time, err := timeToComplete(input, 5, 61)
 	if err != nil {
 		return "", err
 	}
-	graph := newDependencyGraph(reqs, true)
+	return strconv.Itoa(time), nil
+}
 
-	workerCount := 5
+func timeToComplete(input string, workerCount int, durationOfStepA int) (int, error) {
+	reqs, err := parseInput(input)
+	if err != nil {
+		return 0, err
+	}
+
+	graph := newDependencyGraph(reqs, true)
 	currentSteps := make([]stepInProgress, workerCount)
 	complete := false
 	time := -1
@@ -159,7 +169,7 @@ func Part2(input string) (string, error) {
 					complete = false
 					currentSteps[i] = stepInProgress{
 						Step:     nextStep,
-						TimeLeft: stepDuration(nextStep) - 1,
+						TimeLeft: stepDuration(nextStep, durationOfStepA) - 1,
 					}
 				} else {
 					currentSteps[i].Step = ""
@@ -173,11 +183,11 @@ func Part2(input string) (string, error) {
 
 	for _, dependencyCount := range graph.unbuiltDependencyCounts {
 		if dependencyCount > 0 {
-			return "", fmt.Errorf("cycle detected")
+			return 0, fmt.Errorf("cycle detected")
 		}
 	}
 
-	return strconv.Itoa(time), nil
+	return time, nil
 }
 
 func parseInput(input string) ([]requirement, error) {
@@ -208,7 +218,6 @@ func parseLine(line string) (req requirement, err error) {
 }
 
 // Assumes the step has length 1 and is A-Z.
-func stepDuration(step string) int {
-	durationOfStepA := 61
+func stepDuration(step string, durationOfStepA int) int {
 	return durationOfStepA + (int(step[0]) - int('A'))
 }
