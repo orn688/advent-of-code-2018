@@ -4,7 +4,8 @@ import (
 	"testing"
 )
 
-var input = `
+func TestPart1(t *testing.T) {
+	input := `
 /->-\
 |   |  /----\
 | /-+--+-\  |
@@ -12,8 +13,6 @@ var input = `
 \-+-/  \-+--/
   \------/
 `
-
-func TestPart1(t *testing.T) {
 	expected := "7,3"
 	actual, _ := Part1(input)
 	if actual != expected {
@@ -22,5 +21,18 @@ func TestPart1(t *testing.T) {
 }
 
 func TestPart2(t *testing.T) {
-
+	input := `
+/>-<\
+|   |
+| /<+-\
+| | | v
+\>+</ |
+  |   ^
+  \<->/
+`
+	expected := "6,4"
+	actual, _ := Part2(input)
+	if actual != expected {
+		t.Errorf("expected %s actual %s", expected, actual)
+	}
 }
