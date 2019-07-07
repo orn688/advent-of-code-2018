@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var input = `initial state: #..#.#..##......###...###
+const input = `initial state: #..#.#..##......###...###
 
 ...## => #
 ..#.. => #

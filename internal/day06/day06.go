@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-var infinity = -1
+const infinity = -1
 
 type point struct {
 	X int

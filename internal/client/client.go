@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-var cacheDirName = ".aoc_cache"
+const cacheDirName = ".aoc_cache"
 
 // GetInput fetches and returns the AoC input for the given day. It maintains a
 // local cache of the input for each day (in .aoc_cache/<day>) to avoid making

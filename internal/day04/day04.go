@@ -20,7 +20,7 @@ type guardEvent struct {
 	Awake     bool
 }
 
-var unknownGuardID = -1
+const unknownGuardID = -1
 
 // Part1 returns the id of the guard with the most time spent asleep,
 // multiplied by the minute (between 00:00 and 00:50) during which that guard

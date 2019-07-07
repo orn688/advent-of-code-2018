@@ -9,9 +9,9 @@ import (
 	"strings"
 )
 
-var hasPlant = '#'
-var noPlant = '.'
-var patternLength uint = 5
+const hasPlant = '#'
+const noPlant = '.'
+const patternLength uint = 5
 
 type plantPot struct {
 	hasPlant bool

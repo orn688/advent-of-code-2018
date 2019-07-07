@@ -17,7 +17,7 @@ const (
 	left  CartDirection = '<'
 )
 
-var cartDirections = []CartDirection{up, right, down, left}
+var cartDirections = [4]CartDirection{up, right, down, left}
 var cartRegex = regexp.MustCompile(`[\^>v<]`)
 
 func directionIndex(dir CartDirection) int {
