@@ -2,9 +2,6 @@ package day12
 
 import (
 	"container/list"
-	"log"
-	"os"
-	"runtime/pprof"
 	"strconv"
 	"strings"
 )
@@ -29,13 +26,6 @@ func Part1(input string) (string, error) {
 // Part2 returns the sum of the pot numbers of all plants with pots after 50
 // billion generations.
 func Part2(input string) (string, error) {
-	f, err := os.Create("cpuprofile")
-	if err != nil {
-		log.Fatal(err)
-	}
-	pprof.StartCPUProfile(f)
-	defer pprof.StopCPUProfile()
-
 	pots, rules := parseInput(input)
 	sum := sumAfterGenerations(pots, rules, 50000000000)
 	return strconv.Itoa(sum), nil
